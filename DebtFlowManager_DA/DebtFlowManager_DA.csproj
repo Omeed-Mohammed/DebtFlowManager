@@ -44,6 +44,7 @@
     <Compile Include="DataAccessSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Suppliers\SupplierDebtRepository.cs" />
+    <Compile Include="Suppliers\SupplierInvoicesRepository.cs" />
     <Compile Include="Suppliers\SupplierPaymentRepository.cs" />
     <Compile Include="Suppliers\SupplierRepository.cs" />
   </ItemGroup>

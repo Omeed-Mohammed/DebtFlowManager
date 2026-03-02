@@ -164,7 +164,7 @@ namespace DebtFlowManager_DA.Suppliers
 
                 connection.Open();
 
-                int rowsAffected = (int)command.ExecuteScalar();
+                int rowsAffected = (int)command.ExecuteNonQuery();
                 return rowsAffected > 0;
             }
         }
@@ -180,7 +180,7 @@ namespace DebtFlowManager_DA.Suppliers
 
                 connection.Open();
 
-                int rowsAffected = (int)command.ExecuteScalar();
+                int rowsAffected = (int)command.ExecuteNonQuery();
                 return rowsAffected > 0;
             }
         }

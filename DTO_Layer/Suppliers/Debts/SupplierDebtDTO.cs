@@ -14,7 +14,7 @@ namespace DTO_Layer.Suppliers
         public DateTime Date { get; set; }
         public string Note { get; set; }
         public string CreatedBy { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public DateTime? CreatedAt { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime? UpdatedAt { get; set; }
 
@@ -25,7 +25,7 @@ namespace DTO_Layer.Suppliers
             DateTime date,
             string note,
             string createdBy,
-            DateTime createdAt,
+            DateTime? createdAt,
             string updatedBy,
             DateTime? updatedAt
             )

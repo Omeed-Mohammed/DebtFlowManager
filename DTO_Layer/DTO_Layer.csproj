@@ -44,7 +44,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Suppliers\Debts\CreateSupplierDebtRequestDTO.cs" />
     <Compile Include="Suppliers\Debts\UpdateSupplierDebtRequestDTO.cs" />
-    <Compile Include="Suppliers\Invoices\CreateSupplierInvoiceRequestDTO.cs" />
     <Compile Include="Suppliers\Payments\CreateSupplierPaymentTransactionRequestDTO.cs" />
     <Compile Include="Suppliers\Payments\UpdateSupplierPaymentRequestDTO.cs" />
     <Compile Include="Suppliers\Requests\CreateSupplierRequestDTO.cs" />

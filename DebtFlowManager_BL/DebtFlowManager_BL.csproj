@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Suppliers\SupplierDebtService.cs" />
+    <Compile Include="Suppliers\SupplierPaymentService.cs" />
     <Compile Include="Suppliers\SupplierService.cs" />
   </ItemGroup>
   <ItemGroup>

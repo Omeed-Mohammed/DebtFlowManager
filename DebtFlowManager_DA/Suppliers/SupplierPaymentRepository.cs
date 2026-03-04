@@ -1,5 +1,5 @@
 ﻿using DTO_Layer.Suppliers;
-
+using DTO_Layer.Suppliers.Payments;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -13,39 +13,45 @@ namespace DebtFlowManager_DA.Suppliers
 {
     public class SupplierPaymentRepository
     {
-        public static string AddSupplierPayment(SupplierPaymentInvoiceDTO invoiceDTO , CreateSupplierPaymentRequestDTO paymentRequestDTO)
+        public static string AddSupplierPayment(CreateSupplierPaymentTransactionRequestDTO RequestDTO)
         {
+            if (RequestDTO == null)
+                throw new ArgumentNullException(nameof(RequestDTO));
+
             using (var connection = new SqlConnection(DataAccessSettings.ConnectionString))
             using (var command = new SqlCommand("SP_SupplierPayment_Add", connection))
             {
                 command.CommandType = CommandType.StoredProcedure;
 
-                command.Parameters.Add("@SupplierID", SqlDbType.Int).Value =  invoiceDTO.SupplierID;
+                command.Parameters.Add("@SupplierID", SqlDbType.Int).Value = RequestDTO.SupplierID;
 
                 var amountParam = command.Parameters.Add("@Amount", SqlDbType.Decimal);
                 amountParam.Precision = 18;
                 amountParam.Scale = 2;
-                amountParam.Value = invoiceDTO.InvoiceAmount;
+                amountParam.Value = RequestDTO.InvoiceAmount;
 
                 command.Parameters.Add("@InvoiceNote", SqlDbType.NVarChar, 250)
-                 .Value = (object)invoiceDTO.InvoiceNote ?? DBNull.Value;
+                 .Value = (object)RequestDTO.InvoiceNote ?? DBNull.Value;
 
                 command.Parameters.Add("@PaymentNote", SqlDbType.NVarChar, 250)
-                 .Value = (object)paymentRequestDTO.PaymentNote ?? DBNull.Value;
+                 .Value = (object)RequestDTO.PaymentNote ?? DBNull.Value;
 
                 command.Parameters.Add("@CreatedBy", SqlDbType.NVarChar, 100)
-                .Value = invoiceDTO.CreatedBy;
+                .Value = RequestDTO.CreatedBy;
 
                 command.Parameters.Add("@ReceiverName", SqlDbType.NVarChar, 150)
-                .Value = invoiceDTO.ReceiverName;
+                .Value = RequestDTO.ReceiverName;
 
                 command.Parameters.Add("@SignaturePath", SqlDbType.NVarChar, 300)
-                .Value = (object)invoiceDTO.SignaturePath ?? DBNull.Value;
+                .Value = (object)RequestDTO.SignaturePath ?? DBNull.Value;
 
                 connection.Open();
                 var receiptNo = command.ExecuteScalar();
 
-                return receiptNo?.ToString();
+                if (receiptNo == null)
+                    throw new Exception("Failed to generate receipt number.");
+
+                return receiptNo.ToString();
             }
         }
 
@@ -65,86 +71,86 @@ namespace DebtFlowManager_DA.Suppliers
 
                 using (var reader = command.ExecuteReader())
                 {
-                    if (reader.HasRows)
+                    int PaymentIDIndex = reader.GetOrdinal("PaymentID");
+                    int InvoiceIDIndex = reader.GetOrdinal("InvoiceID");
+
+                    int receiptNoIndex = reader.GetOrdinal("ReceiptNo");
+
+                    int InvoiceDateIndex = reader.GetOrdinal("InvoiceDate");
+
+                    int TotalAmountIndex = reader.GetOrdinal("TotalAmount");
+                    int InvoiceNoteIndex = reader.GetOrdinal("InvoiceNote");
+                    int ReceiverNameIndex = reader.GetOrdinal("ReceiverName");
+                    int SignaturePathIndex = reader.GetOrdinal("SignaturePath");
+
+                    int CreatedByIndex = reader.GetOrdinal("CreatedBy");
+                    int CreatedAtIndex = reader.GetOrdinal("CreatedAt");
+
+                    int PaymentNoteIndex = reader.GetOrdinal("PaymentNote");
+
+                    int UpdatedByIndex = reader.GetOrdinal("UpdatedBy");
+                    int UpdatedAtIndex = reader.GetOrdinal("UpdatedAt");
+
+                    while (reader.Read())
                     {
-                        int PaymentIDIndex = reader.GetOrdinal("PaymentID");
-                        int InvoiceIDIndex = reader.GetOrdinal("InvoiceID");
+                        string invoiceNote = reader.IsDBNull(InvoiceNoteIndex)
+                            ? null
+                            : reader.GetString(InvoiceNoteIndex);
 
-                        int receiptNoIndex = reader.GetOrdinal("ReceiptNo");
+                        string paymentNote = reader.IsDBNull(PaymentNoteIndex)
+                            ? null
+                            : reader.GetString(PaymentNoteIndex);
 
-                        int InvoiceDateIndex = reader.GetOrdinal("InvoiceDate");
+                        string updatedBy = reader.IsDBNull(UpdatedByIndex)
+                            ? null
+                            : reader.GetString(UpdatedByIndex);
 
-                        int TotalAmountIndex = reader.GetOrdinal("TotalAmount");
-                        int InvoiceNoteIndex = reader.GetOrdinal("InvoiceNote");
-                        int ReceiverNameIndex = reader.GetOrdinal("ReceiverName");
-                        int SignaturePathIndex = reader.GetOrdinal("SignaturePath");
+                        DateTime? updatedAt = reader.IsDBNull(UpdatedAtIndex)
+                            ? (DateTime?)null
+                            : reader.GetDateTime(UpdatedAtIndex);
 
-                        int CreatedByIndex = reader.GetOrdinal("CreatedBy");
-                        int CreatedAtIndex = reader.GetOrdinal("CreatedAt");
-
-                        int PaymentNoteIndex = reader.GetOrdinal("PaymentNote");
-
-                        int UpdatedByIndex = reader.GetOrdinal("UpdatedBy");
-                        int UpdatedAtIndex = reader.GetOrdinal("UpdatedAt");
-
-
-                        while (reader.Read())
-                        {
-                            string invoiceNote = reader.IsDBNull(InvoiceNoteIndex)
-                                ? null
-                                : reader.GetString(InvoiceNoteIndex);
-
-                            string paymentNote = reader.IsDBNull(PaymentNoteIndex)
-                                ? null
-                                : reader.GetString(PaymentNoteIndex);
-
-                            string updatedBy = reader.IsDBNull(UpdatedByIndex)
-                                ? null
-                                : reader.GetString(UpdatedByIndex);
-
-                            DateTime? updatedAt = reader.IsDBNull(UpdatedAtIndex)
-                                ? (DateTime?)null
-                                : reader.GetDateTime(UpdatedAtIndex);
-
-                            string signaturePath = reader.IsDBNull(SignaturePathIndex)
-                                ? null
-                                : reader.GetString(SignaturePathIndex);
+                        string signaturePath = reader.IsDBNull(SignaturePathIndex)
+                            ? null
+                            : reader.GetString(SignaturePathIndex);
 
 
 
-                            SupplierPaymentsList.Add(new SupplierPaymentViewDTO(
-                                reader.GetInt32(PaymentIDIndex),
-                                reader.GetInt32(InvoiceIDIndex),
+                        SupplierPaymentsList.Add(new SupplierPaymentViewDTO(
+                            reader.GetInt32(PaymentIDIndex),
+                            reader.GetInt32(InvoiceIDIndex),
 
-                                reader.GetString(receiptNoIndex),
-                                reader.GetDateTime(InvoiceDateIndex),
+                            reader.GetString(receiptNoIndex),
+                            reader.GetDateTime(InvoiceDateIndex),
 
-                                reader.GetDecimal(TotalAmountIndex),
+                            reader.GetDecimal(TotalAmountIndex),
 
-                                invoiceNote,
-                                reader.GetString(ReceiverNameIndex),
-                                signaturePath,
-                                reader.GetString(CreatedByIndex),
+                            invoiceNote,
+                            reader.GetString(ReceiverNameIndex),
+                            signaturePath,
+                            reader.GetString(CreatedByIndex),
 
-                                reader.GetDateTime(CreatedAtIndex),
+                            reader.GetDateTime(CreatedAtIndex),
 
-                                paymentNote,
-                                updatedBy,
-                                updatedAt
-                                ));
-
-                        }
+                            paymentNote,
+                            updatedBy,
+                            updatedAt
+                            ));
 
                     }
 
-                    return SupplierPaymentsList;
                 }
+
+                return SupplierPaymentsList;
             }
         }
 
 
-        public static bool UpdateSupplierPayments(SupplierPaymentDTO paymentDTO)
+        public static bool UpdateSupplierPayments(UpdateSupplierPaymentRequestDTO paymentDTO)
         {
+
+            if (paymentDTO == null)
+                throw new ArgumentNullException(nameof(paymentDTO));
+
             using (var connection = new SqlConnection(DataAccessSettings.ConnectionString))
             using (var command = new SqlCommand("SP_SupplierPayment_Update", connection))
             {

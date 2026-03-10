@@ -41,7 +41,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Permissions\PermissionDTO.cs" />
+    <Compile Include="Persons\PersonDTO.cs" />
+    <Compile Include="Persons\PersonNoteDTO.cs" />
+    <Compile Include="Persons\PersonPhoneDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RolePermission\PermissionSummaryDTO.cs" />
+    <Compile Include="RolePermission\RolePermissionDTO.cs" />
+    <Compile Include="RolePermission\RoleSummaryDTO.cs" />
+    <Compile Include="Roles\RoleDTO.cs" />
     <Compile Include="Suppliers\Debts\CreateSupplierDebtRequestDTO.cs" />
     <Compile Include="Suppliers\Debts\UpdateSupplierDebtRequestDTO.cs" />
     <Compile Include="Suppliers\Payments\CreateSupplierPaymentTransactionRequestDTO.cs" />
@@ -53,6 +61,13 @@
     <Compile Include="Suppliers\Invoices\SupplierPaymentInvoiceDTO.cs" />
     <Compile Include="Suppliers\Payments\SupplierPaymentViewDTO.cs" />
     <Compile Include="Suppliers\Requests\UpdateSupplierRequestDTO.cs" />
+    <Compile Include="UserRole\UserRoleDTO.cs" />
+    <Compile Include="UserRole\UserRoleRoleDTO.cs" />
+    <Compile Include="UserRole\UserRoleUserDTO.cs" />
+    <Compile Include="Users\ChangeUserPasswordRequestDTO.cs" />
+    <Compile Include="Users\CreateUserRequestDTO.cs" />
+    <Compile Include="Users\UserDTO.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

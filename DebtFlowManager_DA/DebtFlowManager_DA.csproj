@@ -42,11 +42,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataAccessSettings.cs" />
+    <Compile Include="Permissions\PermissionRepository.cs" />
+    <Compile Include="Persons\PersonNoteRepository.cs" />
+    <Compile Include="Persons\PersonPhoneRepository.cs" />
+    <Compile Include="Persons\PersonRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RolePermission\RolePermissionRepository.cs" />
+    <Compile Include="Roles\RoleRepository.cs" />
     <Compile Include="Suppliers\SupplierDebtRepository.cs" />
     <Compile Include="Suppliers\SupplierInvoicesRepository.cs" />
     <Compile Include="Suppliers\SupplierPaymentRepository.cs" />
     <Compile Include="Suppliers\SupplierRepository.cs" />
+    <Compile Include="UserRole\UserRoleRepository.cs" />
+    <Compile Include="Users\UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DTO_Layer\DTO_Layer.csproj">
@@ -54,5 +62,6 @@
       <Name>DTO_Layer</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
